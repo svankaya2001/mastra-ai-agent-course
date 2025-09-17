@@ -1,5 +1,7 @@
 import { Agent } from "@mastra/core/agent";
 import { groq } from "@ai-sdk/groq";
+import { Memory } from "@mastra/memory";
+import { LibSQLStore } from "@mastra/libsql";
 import { getTransactionsTool } from "../tools/get-transactions-tool";
 
 export const financialAgent = new Agent({
@@ -36,4 +38,9 @@ TOOLS
 - Analyze the transaction data to answer user questions about their spending.`,
     model: groq("openai/gpt-oss-20b"),
     tools: { getTransactionsTool },
+    memory: new Memory({
+        storage: new LibSQLStore({
+            url: "file:../mastra.db", // path is relative to the .mastra/output directory
+        }),
+    }),
 });
